@@ -1159,44 +1159,16 @@ bool TWPartition::Backup_Tar(string backup_folder) {
 	sprintf(back_name, "%s.%s.win", Backup_Name.c_str(), Current_File_System.c_str());
 	Backup_FileName = back_name;
 
-	if (Backup_Size > MAX_ARCHIVE_SIZE) {
-		// This backup needs to be split into multiple archives
-		ui_print("Breaking backup file into multiple archives...\nGenerating file lists\n");
-		sprintf(back_name, "%s", Backup_Path.c_str());
-		backup_count = MakeList::Make_File_List(back_name);
-		if (backup_count < 1) {
-			LOGE("Error generating file list!\n");
-			return false;
-		}
-		for (index=0; index<backup_count; index++) {
-			sprintf(split_index, "%03i", index);
-			Full_FileName = backup_folder + "/" + Backup_FileName + split_index;
-			Command = "tar " + Tar_Args + " -f '" + Full_FileName + "' -T /tmp/list/filelist" + split_index;
-			LOGI("Backup command: '%s'\n", Command.c_str());
-			ui_print("Backup archive %i of %i...\n", (index + 1), backup_count);
-			system(Command.c_str()); // sending backup command formed earlier above
-
-			file_size = TWFunc::Get_File_Size(Full_FileName);
-			if (file_size == 0) {
-				LOGE("Backup file size for '%s' is 0 bytes.\n", Full_FileName.c_str()); // oh noes! file size is 0, abort! abort!
-				return false;
-			}
-			total_bsize += file_size;
-		}
-		ui_print(" * Total size: %llu bytes.\n", total_bsize);
-		system("cd /tmp && rm -rf list");
-	} else {
-		Full_FileName = backup_folder + "/" + Backup_FileName;
-		if (Has_Data_Media)
-			Command = "cd " + Backup_Path + " && tar " + Tar_Args + " ./ --exclude='media*' -f '" + Full_FileName + "'";
-		else
-			Command = "cd " + Backup_Path + " && tar " + Tar_Args + " -f '" + Full_FileName + "' ./*";
-		LOGI("Backup command: '%s'\n", Command.c_str());
-		system(Command.c_str());
-		if (TWFunc::Get_File_Size(Full_FileName) == 0) {
-			LOGE("Backup file size for '%s' is 0 bytes.\n", Full_FileName.c_str());
-			return false;
-		}
+    Full_FileName = backup_folder + "/" + Backup_FileName;
+	if (use_compression)
+		Command = "cd " + Backup_Path + " && tar -cf - ./* | gzip > " + Full_FileName;
+	else
+		Command = "cd " + Backup_Path + " && tar -cf '" + Full_FileName + "' ./*";
+	LOGI("Backup command: '%s'\n", Command.c_str());
+	system(Command.c_str());
+	if (TWFunc::Get_File_Size(Full_FileName) == 0) {
+		LOGE("Backup file size is 0 bytes (possible tar/gzip issue).\n", Full_FileName.c_str());
+		return false;
 	}
 	return true;
 }

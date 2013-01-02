@@ -702,20 +702,20 @@ int TWPartitionManager::Run_Backup(void) {
 			return false;
 		}
 	}
-	DataManager::GetValue(TW_BACKUP_BOOT_VAR, check);
-	if (check) {
-		backup_boot = Find_Partition_By_Path("/boot");
-		if (backup_boot != NULL) {
-			partition_count++;
-			if (backup_boot->Backup_Method == 1)
-				file_bytes += backup_boot->Backup_Size;
-			else
-				img_bytes += backup_boot->Backup_Size;
-		} else {
-			LOGE("Unable to locate boot partition.\n");
-			return false;
-		}
-	}
+	//DataManager::GetValue(TW_BACKUP_BOOT_VAR, check);
+	//if (check) {
+	//	backup_boot = Find_Partition_By_Path("/boot");
+	//	if (backup_boot != NULL) {
+	//		partition_count++;
+	//		if (backup_boot->Backup_Method == 1)
+	//			file_bytes += backup_boot->Backup_Size;
+	//		else
+	//			img_bytes += backup_boot->Backup_Size;
+	//	} else {
+	//		LOGE("Unable to locate boot partition.\n");
+	//		return false;
+	//	}
+	//}
 	DataManager::GetValue(TW_BACKUP_ANDSEC_VAR, check);
 	if (check) {
 		backup_andsec = Find_Partition_By_Path("/and-sec");
@@ -950,15 +950,15 @@ int TWPartitionManager::Run_Restore(string Restore_Name) {
 		}
 		partition_count++;
 	}
-	DataManager::GetValue(TW_RESTORE_BOOT_VAR, check);
-	if (check > 0) {
-		restore_boot = Find_Partition_By_Path("/boot");
-		if (restore_boot == NULL) {
-			LOGE("Unable to locate boot partition.\n");
-			return false;
-		}
-		partition_count++;
-	}
+	//DataManager::GetValue(TW_RESTORE_BOOT_VAR, check);
+	//if (check > 0) {
+	//	restore_boot = Find_Partition_By_Path("/boot");
+	//	if (restore_boot == NULL) {
+	//		LOGE("Unable to locate boot partition.\n");
+	//		return false;
+	//	}
+	//	partition_count++;
+	//}
 	DataManager::GetValue(TW_RESTORE_ANDSEC_VAR, check);
 	if (check > 0) {
 		restore_andsec = Find_Partition_By_Path("/and-sec");
