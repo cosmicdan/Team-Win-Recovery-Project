@@ -655,7 +655,7 @@ bool TWPartition::Mount(bool Display_Error) {
 
 	// Check the current file system before mounting
 	Check_FS_Type();
-
+    
 	if (Fstab_File_System == "yaffs2") {
 		// mount an MTD partition as a YAFFS2 filesystem.
 		mtd_scan_partitions();
@@ -674,6 +674,12 @@ bool TWPartition::Mount(bool Display_Error) {
 			return false;
 		} else
 			return true;
+    } else if (Actual_Block_Device.find("." + Current_File_System + ".img") != string::npos) {
+        LOGI("Mounting '%s' as loopback...\n", Actual_Block_Device.c_str());
+        string Command;
+        Command = "mount -t " + Current_File_System + " " + Actual_Block_Device + " " + Mount_Point;
+		system(Command.c_str());
+        return true;
 	} else if (mount(Actual_Block_Device.c_str(), Mount_Point.c_str(), Current_File_System.c_str(), 0, NULL) != 0) {
 		if (Display_Error)
 			LOGE("Unable to mount '%s'\n", Mount_Point.c_str());
@@ -979,7 +985,7 @@ bool TWPartition::Wipe_EXT23(string File_System) {
 
 		ui_print("Formatting %s using mke2fs...\n", Display_Name.c_str());
 		Find_Actual_Block_Device();
-		sprintf(command, "mke2fs -t %s -m 0 %s", File_System.c_str(), Actual_Block_Device.c_str());
+		sprintf(command, "mke2fs -F -t %s -m 0 %s", File_System.c_str(), Actual_Block_Device.c_str());
 		LOGI("mke2fs command: %s\n", command);
 		if (system(command) == 0) {
 			Recreate_AndSec_Folder();
