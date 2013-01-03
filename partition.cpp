@@ -715,10 +715,18 @@ bool TWPartition::UnMount(bool Display_Error) {
 
 		if (umount(Mount_Point.c_str()) != 0) {
 			if (Display_Error)
-				LOGE("Unable to unmount '%s'\n", Mount_Point.c_str());
+				LOGE("Unable to unmount '%s', trying lazy unmount...\n", Mount_Point.c_str());
 			else
-				LOGI("Unable to unmount '%s'\n", Mount_Point.c_str());
-			return false;
+				LOGI("Unable to unmount '%s', trying lazy unmount...\n", Mount_Point.c_str());
+            // try a lazy unmount
+            string Command;
+            Command = "umount -l " + Mount_Point;
+            system(Command.c_str());
+            if (Is_Mounted()) {
+                return false;
+            } else {
+                return true;
+            }
 		} else
 			return true;
 	} else {
