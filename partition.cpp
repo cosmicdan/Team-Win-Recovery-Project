@@ -1256,29 +1256,9 @@ bool TWPartition::Restore_Tar(string restore_folder, string Restore_File_System)
 	TWFunc::GUI_Operation_Text(TW_RESTORE_TEXT, Display_Name, "Restoring");
 	ui_print("Restoring %s...\n", Display_Name.c_str());
 	Full_FileName = restore_folder + "/" + Backup_FileName;
-	if (!TWFunc::Path_Exists(Full_FileName)) {
-		// Backup is multiple archives
-		LOGI("Backup is multiple archives.\n");
-		sprintf(split_index, "%03i", index);
-		Full_FileName = restore_folder + "/" + Backup_FileName + split_index;
-		while (TWFunc::Path_Exists(Full_FileName)) {
-			ui_print("Restoring archive %i...\n", index + 1);
-			Command = "tar -xf '" + Full_FileName + "'";
-			LOGI("Restore command: '%s'\n", Command.c_str());
-			system(Command.c_str());
-			index++;
-			sprintf(split_index, "%03i", index);
-			Full_FileName = restore_folder + "/" + Backup_FileName + split_index;
-		}
-		if (index == 0) {
-			LOGE("Error locating restore file: '%s'\n", Full_FileName.c_str());
-			return false;
-		}
-	} else {
-		Command = "cd " + Backup_Path + " && tar -xf '" + Full_FileName + "'";
-		LOGI("Restore command: '%s'\n", Command.c_str());
-		system(Command.c_str());
-	}
+	Command = "cd " + Backup_Path + " && gunzip -c '" + Full_FileName + "' | tar -xf -";
+	LOGI("Restore command: '%s'\n", Command.c_str());
+    system(Command.c_str());
 	return true;
 }
 
