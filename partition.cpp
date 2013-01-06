@@ -1148,8 +1148,8 @@ bool TWPartition::Wipe_Data_Without_Wiping_Media() {
 
 bool TWPartition::Backup_Tar(string backup_folder) {
 	char back_name[255], split_index[5];
-	string Full_FileName, Split_FileName, Tar_Args, Command;
-	int use_compression, index, backup_count;
+	string Full_FileName, Split_FileName, Command;
+	int index, backup_count;
 	struct stat st;
 	unsigned long long total_bsize = 0, file_size;
 
@@ -1164,20 +1164,11 @@ bool TWPartition::Backup_Tar(string backup_folder) {
 		ui_print("Backing up %s...\n", Display_Name.c_str());
 	}
 
-	DataManager::GetValue(TW_USE_COMPRESSION_VAR, use_compression);
-	if (use_compression)
-		Tar_Args = "-cz";
-	else
-		Tar_Args = "-c";
-
 	sprintf(back_name, "%s.%s.win", Backup_Name.c_str(), Current_File_System.c_str());
 	Backup_FileName = back_name;
 
     Full_FileName = backup_folder + "/" + Backup_FileName;
-	if (use_compression)
-		Command = "cd " + Backup_Path + " && tar -cf - ./* | gzip > " + Full_FileName;
-	else
-		Command = "cd " + Backup_Path + " && tar -cf '" + Full_FileName + "' ./*";
+    Command = "cd " + Backup_Path + " && tar -cf - ./* | gzip > " + Full_FileName;
 	LOGI("Backup command: '%s'\n", Command.c_str());
 	system(Command.c_str());
 	if (TWFunc::Get_File_Size(Full_FileName) == 0) {
