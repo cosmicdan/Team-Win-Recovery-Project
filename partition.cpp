@@ -243,7 +243,7 @@ bool TWPartition::Process_Fstab_Line(string Line, bool Display_Error) {
 			SubPartition_Of = "/data";
 			DataManager::SetValue(TW_HAS_DATADATA, 1);
 		} else if (Mount_Point == "/sd-ext") {
-			Wipe_During_Factory_Reset = true;
+			Wipe_During_Factory_Reset = false;
 			Display_Name = "SD-Ext";
 			Wipe_Available_in_GUI = true;
 			Removable = true;
