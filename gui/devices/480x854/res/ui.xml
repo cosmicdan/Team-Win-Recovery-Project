@@ -12,7 +12,7 @@
 	<resources>
 		<resource name="font" type="font" filename="Roboto-Regular-20" />
 		<resource name="mediumfont" type="font" filename="Roboto-Regular-20" />
-		<resource name="filelist" type="font" filename="Roboto-Regular-30" />
+		<resource name="filelist" type="font" filename="Roboto-Regular-20" />
 		<resource name="top_bar" type="image" filename="top-bar.jpg" />
 		<resource name="main_button" type="image" filename="menu-button" />
 		<resource name="file_icon" type="image" filename="file" />
@@ -129,7 +129,7 @@
 		<variable name="fileselector_separatorcolor" value="#505050" />
 		<variable name="fileselector_separatorheight" value="2" />
 		<variable name="fileselector_background" value="#303030" />
-		<variable name="fileselector_spacing" value="18" />
+		<variable name="fileselector_spacing" value="28" />
 		<variable name="listbox_x" value="5" />
 		<variable name="listbox_width" value="470" />
 		<variable name="listbox_tz_height" value="280" />
