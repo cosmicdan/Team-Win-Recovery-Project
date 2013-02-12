@@ -357,6 +357,7 @@ int TWFunc::tw_reboot(RebootCommand command)
 {
 	// Always force a sync before we reboot
     sync();
+    string dummyval;
 
     switch (command)
     {
@@ -378,6 +379,10 @@ int TWFunc::tw_reboot(RebootCommand command)
     case rb_download:
 		check_and_run_script("/sbin/rebootdownload.sh", "reboot download");
 		return __reboot(LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, LINUX_REBOOT_CMD_RESTART2, (void*) "download");
+    case rb_bootmenu:
+        Exec_Cmd("touch /tmp/bootmenu", dummyval);
+        Exec_Cmd("kill `pidof recovery`", dummyval);
+        return 1;
 	return 1;
     default:
         return -1;

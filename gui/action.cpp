@@ -352,6 +352,8 @@ int GUIAction::doAction(Action action, int isThreaded /* = 0 */)
 			TWFunc::tw_reboot(rb_bootloader);
 		else if (arg == "download")
 			TWFunc::tw_reboot(rb_download);
+        else if (arg == "bootmenu")
+			TWFunc::tw_reboot(rb_bootmenu);
 		else
 			TWFunc::tw_reboot(rb_system);
 
